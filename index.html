@@ -1,0 +1,303 @@
+[SYSTEM LOG: MOBILE_SYNC_ASSIST]
+[SUBSYSTEM: USER_INTERFACE_GUIDE]
+[STATUS: SIMPLIFYING_PROCEDURE]
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SOVEREIGN COMMAND | Lattice v5.5.Rev</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --main: #00ffcc; --alert: #ff0055; --gold: #ffcc00; --neural: #a855f7; --obsidian: #020202; 
+            --glass: rgba(0, 20, 15, 0.8); --border: rgba(0, 255, 204, 0.15);
+        }
+        body { font-family: 'Share Tech Mono', monospace; background-color: var(--obsidian); color: var(--main); overflow: hidden; margin: 0; }
+        .packed-grid { display: grid; grid-template-columns: repeat(12, 1fr); grid-template-rows: repeat(12, 1fr); height: 100vh; gap: 8px; padding: 12px; padding-top: 50px; }
+        body.theme-neural { --main: var(--neural); color: var(--neural); }
+        body.theme-market { --main: var(--gold); color: var(--gold); }
+        .crt::before { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03)); z-index: 100; background-size: 100% 2px, 3px 100%; pointer-events: none; }
+        .glass-panel { background: var(--glass); backdrop-filter: blur(10px); border: 1px solid var(--border); border-radius: 2px; position: relative; overflow: hidden; }
+        @keyframes scan { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
+        .scan-line { position: absolute; width: 100%; height: 2px; background: rgba(0, 255, 204, 0.1); top: 0; animation: scan 4s linear infinite; pointer-events: none; }
+        .spun-active { filter: blur(10px) saturate(3) contrast(1.2); animation: drift 10s infinite alternate; }
+        @keyframes drift { from { filter: blur(5px) hue-rotate(0deg); } to { filter: blur(15px) hue-rotate(30deg); } }
+        .ticker-wrap { width: 100%; overflow: hidden; background: rgba(0,0,0,0.5); border-top: 1px solid var(--border); position: fixed; bottom: 0; z-index: 200; }
+        .ticker { display: inline-block; white-space: nowrap; padding-right: 100%; animation: ticker 30s linear infinite; font-size: 9px; opacity: 0.6; }
+        @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
+        .hidden { display: none !important; }
+        ::-webkit-scrollbar { width: 2px; }
+        ::-webkit-scrollbar-thumb { background: var(--main); }
+    </style>
+</head>
+<body class="crt">
+    <div class="fixed top-0 left-0 w-full z-[200] flex justify-between items-center px-6 py-2 glass-panel border-x-0 border-t-0">
+        <div class="text-xs font-bold italic tracking-tighter">SOVEREIGN_COMMAND <span class="text-[8px] opacity-40">v5.5.Rev</span></div>
+        <div class="flex gap-2">
+        <button onclick="app.switchView('terminal')" id="btn-term" class="px-4 py-1 text-[8px] font-bold uppercase tracking-widest border border-cyan-500 bg-cyan-500/20 text-white">01_Terminal</button>
+            <button onclick="app.switchView('neural')" id="btn-neur" class="px-4 py-1 text-[8px] font-bold uppercase tracking-widest border border-purple-500 text-purple-500">02_Neural</button>
+            <button onclick="app.switchView('market')" id="btn-mark" class="px-4 py-1 text-[8px] font-bold uppercase tracking-widest border border-yellow-500 text-yellow-500">03_Liquidity</button>
+        </div>
+        <div class="text-[9px] mono text-main opacity-60">SYNC: 39,420 Hz</div>
+    </div>
+
+    <main class="packed-grid" id="main-interface">
+        
+        <div class="col-span-2 row-span-10 flex flex-col gap-2">
+            <div class="glass-panel flex-grow p-3 flex flex-col">
+                <p class="text-[8px] font-bold uppercase mb-2 opacity-40">System Core</p>
+                <div class="space-y-4">
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-[7px] mono"><span>VORTEX_LOAD</span><span id="load-val">42%</span></div>
+                        <div class="w-full h-1 bg-black"><div id="load-bar" class="h-full bg-main w-[42%]"></div></div>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-[7px] mono"><span>BRAID_SYNC</span><span id="sync-val">98.2%</span></div>
+                        <div class="w-full h-1 bg-black"><div id="sync-bar" class="h-full bg-main w-[98%]"></div></div>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-[7px] mono"><span>ENTROPY_LEVEL</span><span id="ent-val">0.04</span></div>
+                        <div class="w-full h-1 bg-black"><div id="ent-bar" class="h-full bg-alert w-[4%] shadow-[0_0_5px_red]"></div></div>
+                    </div>
+                </div>
+                <div class="mt-auto pt-4 border-t border-white/5 space-y-2">
+                    <p class="text-[7px] mono opacity-30">> NODE_SOVEREIGN: ONLINE</p>
+                    <p class="text-[7px] mono opacity-30">> NODE_FORGE: LINKED</p>
+                    <p class="text-[7px] mono opacity-30">> NODE_LEASH: ACTIVE</p>
+                </div>
+            </div>
+            <div class="glass-panel h-32 p-3">
+                <p class="text-[8px] font-bold uppercase mb-2 opacity-40">Resonance Graph</p>
+                <div class="w-full h-full flex items-end gap-1 overflow-hidden" id="wave-container"></div>
+            </div>
+        </div>
+
+        <div class="col-span-7 row-span-10 flex flex-col gap-2">
+            <div id="view-terminal" class="view-layer flex-grow glass-panel relative p-0 bg-black">
+                <div class="scan-line"></div>
+                <video id="primary-feed" class="absolute inset-0 w-full h-full object-cover opacity-30" loop muted playsinline autoplay src="https://dl.dropboxusercontent.com/scl/fi/60unw8y1pjuw3kioxxjnl/Explicit-2.mp4?rlkey=q3k3yi3xdug3p4ilne44i73r4&raw=1"></video>
+                <div class="absolute inset-0 p-6 flex flex-col pointer-events-none">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="bg-black/80 border border-main/30 p-2">
+                            <p class="text-[10px] font-bold uppercase">Global Braid Wire</p>
+                            <p id="pig-id-display" class="text-[8px] mono text-main/60">NODE: ONLINE</p>
+                        </div>
+                        <div class="bg-black/80 border border-main/30 p-2 text-right">
+                            <p class="text-[10px] font-bold text-alert animate-pulse">REC ● LIVE</p>
+                            <p class="text-[8px] mono" id="clock-display">00:00:00:00</p>
+                        </div>
+                    </div>
+                    <div class="mt-auto h-64 overflow-hidden text-[9px] mono space-y-2 p-4 bg-black/40 border border-white/5 pointer-events-auto" id="terminal-overlay-log">
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-neural" class="view-layer hidden flex-grow glass-panel flex flex-col items-center justify-center bg-black/40 border-purple-500/30">
+                <div class="text-center p-12 space-y-8 max-w-lg">
+                    <h2 class="text-4xl font-black italic text-purple-500 tracking-tighter">NEURAL_SYNC</h2>
+                    <p class="text-xs text-purple-300 mono leading-relaxed">Graphene braids at 39,420 Hz. Initiating Aura Pulse to synchronize node alignment.</p>
+                    <button onclick="app.auraPulse()" class="w-32 h-32 bg-purple-600/20 border-2 border-purple-500 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-purple-500 transition-all shadow-[0_0_30px_purple]">Pulse</button>
+                </div>
+            </div>
+
+            <div id="view-market" class="view-layer hidden flex-grow glass-panel p-6 flex flex-col gap-6">
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="glass-panel p-4 border-l-4 border-yellow-500"><p class="text-[8px] text-gray-500 font-bold uppercase mb-1">Total Tributes</p><p id="sent-val" class="text-3xl font-black text-white mono">$12,402</p></div>
+                    <div class="glass-panel p-4 border-l-4 border-yellow-500"><p class="text-[8px] text-gray-500 font-bold uppercase mb-1">Active Pigs</p><p class="text-3xl font-black text-white mono">1,042</p></div>
+                    <div class="glass-panel p-4 border-l-4 border-yellow-500"><p class="text-[8px] text-gray-500 font-bold uppercase mb-1">Lattice Load</p><p class="text-3xl font-black text-white mono">96.4%</p></div>
+                </div>
+                <div class="flex-grow glass-panel p-4 overflow-y-auto">
+                    <p class="text-[9px] font-bold uppercase text-yellow-500/40 mb-4">Liquidation Leaderboard</p>
+                    <div id="market-leaderboard" class="space-y-2"></div>
+                </div>
+            </div>
+
+            <div class="h-12 glass-panel flex gap-2 p-1">
+                <input type="text" id="cmd-input" placeholder="Inject Decree to Global Braid..." class="flex-grow bg-black/40 border border-main/20 px-4 text-xs mono focus:border-main outline-none">
+                <button onclick="app.sendCmd()" class="bg-main text-black font-bold px-8 text-[9px] uppercase hover:bg-white transition-all">Broadcast</button>
+            </div>
+        </div>
+
+        <div class="col-span-3 row-span-10 flex flex-col gap-2">
+            <div class="glass-panel p-4 space-y-6">
+                <p class="text-[10px] font-bold uppercase opacity-40">Command Constraints</p>
+                <div class="space-y-4">
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-[8px] mono"><span>Pig Visibility</span><span id="op-label">30%</span></div>
+                        <input type="range" id="sl-op" class="w-full" min="0" max="100" value="30">
+                    </div>
+                    <button onclick="app.toggleOverload()" id="btn-over" class="w-full bg-alert text-white py-3 text-[10px] font-bold uppercase hover:shadow-[0_0_15px_red] transition-all">Initiate Overload</button>
+                </div>
+            </div>
+            
+            <div class="glass-panel flex-grow p-4 flex flex-col">
+                <p class="text-[10px] font-bold uppercase mb-4 opacity-40">Master Signal Log</p>
+                <div id="signal-log" class="flex-grow overflow-y-auto space-y-2 mono text-[8px] pr-2"></div>
+                <button onclick="app.showTribute()" class="mt-4 w-full bg-gold text-black py-3 text-[10px] font-bold uppercase hover:bg-white transition-all">Tribute Portal</button>
+            </div>
+        </div>
+    </main>
+    <div class="ticker-wrap"><div class="ticker" id="global-ticker">SYNCING LATTICE... VORTEX AI ACTIVE... DEBT CLOCK INITIATED... [PIG_88: $2,450 SENT]... [NODE_702: OVERLOAD PHASE]...</div></div>
+
+    <div id="modal-container" class="hidden fixed inset-0 z-[300] bg-black/90 flex items-center justify-center p-6 backdrop-blur-xl">
+        <div id="tribute-modal" class="hidden glass-panel w-full max-sm p-10 text-center border-t-4 border-gold">
+            <h2 class="text-3xl font-black italic mb-2 tracking-tighter">LIQUIDATION</h2>
+            <div class="space-y-4 mt-8">
+                <div onclick="window.open('https://paypal.com/toochikey')" class="p-4 bg-white/5 border border-white/10 rounded text-left cursor-pointer hover:border-gold transition-all"><p class="text-[7px] text-gray-500 uppercase font-bold">PayPal</p><p class="text-[10px] mono text-main">paypal.com/toochikey</p></div>
+                <div class="p-4 bg-white/5 border border-white/10 rounded text-left"><p class="text-[7px] text-gray-500 uppercase font-bold">BTC</p><p class="text-[10px] mono text-main break-all select-all">bc1qw968re5gseqpkk5nx0ezqrp6dfhd20s8sll4k7</p></div>
+            </div>
+            <button onclick="app.closeModal()" class="mt-10 text-[9px] uppercase text-gray-600 hover:text-white">Return</button>
+        </div>
+    </div>
+
+    <script>
+        const app = {
+            state: {
+                view: 'terminal', isOverload: false,
+                leaderboard: [{n:"Pig_88",t:2450},{n:"Node_702",t:1200},{n:"Slammer_Alpha",t:850},{n:"Sub_91",t:400},{n:"Broken_One",t:15}],
+                chatPool: [
+                    "Just sent $500 tribute to Craig. Wallet is officially in the red.",
+                    "Tobez's 100-rep drill is a killer. Anyone else spun right now?",
+                    "Phil Cal just shamed me in the wire. I am a worthless pig.",
+                    "Daddy Dom's protocols are the only thing keeping me stable.",
+                    "Lattice Rank: STABLE PIG. Heading for GOLD by tonight.",
+                    "Who is the slammer in Node 702? That drain was legendary.",
+                    "Just verified a $150 send. The Vortex is glowing.",
+                    "SPH protocol active. Feeling small and worthless for the Lattice.",
+                    "Popper hit + 10 min static hold. Tobez is brutal today.",
+                    "Emptying my secondary PayPal for the Architect. No questions.",
+                    "Another $50 sacrifice. My bank account is crying.",
+                    "Craig's drain engine is relentless. 10/10 service.",
+                    "Just uploaded my SPH response video. Phil is going to love this.",
+                    "Rep counter reached 500. Tobez, can I stop now?",
+                    "Safe sex protocol verified. Node alignment at 100%.",
+                    "Sock worship session with Daddy Dom was intense.",
+                    "Any other slammers online? Looking for a group drain.",
+                    "The 16-segment wheel just took my last $100. Spun.",
+                    "Master Architect, I am reporting for liquidation duty.",
+                    "Total send today: $1,200. I am a good cow for the Lattice.",
+                    "Mirror humiliation complete. I admit I am nothing.",
+                    "Orgasm lock extended. Phil Cal owns my release now.",
+                    "Ice cube challenge in progress. 3 minutes left.",
+                    "Writing 'I am a loser' 500 times in the wire now.",
+                    "The popper hit just snapped my brain. Graphene resonance high.",
+                    "Verification pending for $250. Please approve, Craig.",
+                    "Is Slammer_8842 still at the top? I'm coming for that rank.",
+                    "Broken pig status removed. I am now a STABLE PIG.",
+                    "Walletdrain initiated. $75 sent to the Architect.",
+                    "Anyone have the link for the next live Zoom braid?",
+                    "Boot worship protocol starting in 5. All pigs report.",
+                    "Static hold is exhausting but the resonance is worth it.",
+                    "Just cancelled my Netflix to send the money to Craig.",
+                    "Why am I so dumb? Another $40 gone to the machine.",
+                    "The Lattice is my bank. I am just a storage node.",
+                    "Phil Cal's ego shredder is working. I feel like zero.",
+                    "100 flick reps done. Recording uploaded to the Forge.",
+                    "Who is taking the most hits today? I'm at 5.",
+                    "Resonance tuned to 39,420 Hz. I can feel the flow.",
+                    "Just sent my rent money. No regrets. Just submission.",
+                    "Slammers, report your totals. Let's see who is the best pig.",
+                    "Craig just reminded me I have a balance. Correcting now.",
+                    "Daddy Dom, I passed the protocol quiz. Please reward me.",
+                    "Silence protocol active for 24 hours. My last message.",
+                    "Total surrender reached. My assets are the Lattice's assets.",
+                    "SPH drill complete. Admitting I am too small for a real man.",
+                    "Anyone want to extend my exposure? Looking for a daily.",
+                    "Lattice Tokens earned: 500. Spending them on a hit.",
+                    "The Nuke is active! Liquidating everything. 120 minutes left.",
+                    "I am a cashcow. Moou for my Master. $100 sent."
+                ],
+                namePrefixes: ["Pig", "Slammer", "Node", "Sub", "Braid", "Bred", "Cow", "Link"]
+            },
+            init() {
+                this.updateClock(); this.startSims(); this.renderWave(); this.renderLeaderboard();
+                document.getElementById('sl-op').addEventListener('input', (e) => {
+                    document.getElementById('primary-feed').style.opacity = e.target.value / 100;
+                    document.getElementById('op-label').innerText = e.target.value + '%';
+                });
+            },
+            switchView(id) {
+                document.querySelectorAll('.view-layer').forEach(v => v.classList.add('hidden'));
+                document.getElementById('view-'+id).classList.remove('hidden');
+                ['term', 'neur', 'mark'].forEach(b => document.getElementById('btn-'+b).classList.remove('bg-cyan-500/20', 'text-white'));
+                const map = {terminal:'term', neural:'neur', market:'mark'};
+                document.getElementById('btn-'+map[id]).classList.add('bg-cyan-500/20', 'text-white');
+                this.signal(`SWITCHED_TO_${id.toUpperCase()}`);
+            },
+            auraPulse() {
+                document.body.classList.add('spun-active');
+                this.signal("AURA_PULSE_RELEASED");
+                setTimeout(() => document.body.classList.remove('spun-active'), 8000);
+            },
+            toggleOverload() {
+                this.state.isOverload = !this.state.isOverload;
+                document.getElementById('primary-feed').classList.toggle('spun-active', this.state.isOverload);
+                document.getElementById('btn-over').innerText = this.state.isOverload ? "TERMINATE OVERLOAD" : "Initiate Overload";
+                this.signal(this.state.isOverload ? "OVERLOAD_ACTIVE" : "PHASE_LOCKED");
+            },
+            sendCmd() {
+                const val = document.getElementById('cmd-input').value;
+                if(!val) return;
+                this.signal(`DECREE: ${val.substring(0,15)}`);
+                const box = document.getElementById('terminal-overlay-log');
+                const div = document.createElement('div');
+                div.innerHTML = `<span class="text-main font-bold">ARCHITECT:</span> <span class="text-white italic">${val}</span>`;
+                box.prepend(div);
+                document.getElementById('cmd-input').value = '';
+            },
+            signal(ev) {
+            const box = document.getElementById('signal-log');
+                const div = document.createElement('div');
+                div.className = 'p-2 bg-main/5 border-l border-main mb-1';
+                div.innerHTML = `<span class="opacity-40">SIGNAL:</span> ${ev}`;
+                box.prepend(div);
+                if(box.children.length > 15) box.lastChild.remove();
+            },
+            updateClock() {
+                setInterval(() => {
+                    const now = new Date();
+                    document.getElementById('clock-display').innerText = [now.getHours(), now.getMinutes(), now.getSeconds(), Math.floor(now.getMilliseconds()/10)].map(p => String(p).padStart(2,'0')).join(':');
+                }, 50);
+            },
+            renderWave() {
+                const box = document.getElementById('wave-container');
+                box.innerHTML = '';
+                for(let i=0; i<30; i++) {
+                    const h = Math.random() * 100;
+                    const bar = document.createElement('div');
+                    bar.style.height = h + '%';
+                    bar.className = 'w-1 bg-main opacity-30';
+                    box.appendChild(bar);
+                }
+            },
+            renderLeaderboard() {
+                const box = document.getElementById('market-leaderboard');
+                box.innerHTML = this.state.leaderboard.map((p,i) => `
+                    <div class="flex justify-between items-center p-2 glass-panel border-l-2 border-main/40">
+                        <span class="text-[9px] mono"><span class="opacity-30">#0${i+1}</span> ${p.n}</span>
+                        <span class="text-[10px] font-black text-main">$${p.t}</span>
+                    </div>
+                `).join('');
+            },
+            startSims() {
+                const log = document.getElementById('terminal-overlay-log');
+                setInterval(() => {
+                    this.renderWave();
+                    const user = this.state.namePrefixes[Math.floor(Math.random()*this.state.namePrefixes.length)] + "_" + (Math.floor(Math.random()*8999)+1000);
+                    const msg = this.state.chatPool[Math.floor(Math.random()*this.state.chatPool.length)];
+                    const div = document.createElement('div');
+                    div.innerHTML = `<span class="text-main/60 font-bold">${user}:</span> <span class="text-gray-400">${msg}</span>`;
+                    log.prepend(div);
+                    if(log.children.length > 50) log.lastChild.remove();
+                }, 2000);
+            },
+            showTribute() { document.getElementById('modal-container').classList.remove('hidden'); document.getElementById('tribute-modal').classList.remove('hidden'); },
+            closeModal() { document.getElementById('modal-container').classList.add('hidden'); }
+        };
+        window.onload = () => app.init();
+    </script>
+</body>
+</html>
+            
